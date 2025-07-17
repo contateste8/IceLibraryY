@@ -56,7 +56,7 @@ local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(0, 350, 0, 35)
 titleLabel.Position = UDim2.new(0, 10, 0, -2)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "Ice Hub Library - Brookhaven RP"
+titleLabel.Text = ""
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleLabel.Font = Enum.Font.SourceSans
 titleLabel.TextSize = 18
@@ -651,6 +651,10 @@ function AddParagraph(tabScrollFrame, titleText, descriptionText, thumbnailId, t
 	descLabel.Parent = holder
 
 	return holder
+end
+
+function WindowSetTitle(title)
+titleLabel.Text = title
 end
 
 tabButtonsScroll.ScrollBarThickness = 0
