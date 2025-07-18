@@ -104,7 +104,7 @@ end)
 
 local tabButtonsScroll = Instance.new("ScrollingFrame")
 tabButtonsScroll.Size = UDim2.new(0, 110, 1, -35)
-tabButtonsScroll.Position = UDim2.new(0, 0, 0, 45)
+tabButtonsScroll.Position = UDim2.new(0, 0, 0, 30)
 tabButtonsScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 tabButtonsScroll.ScrollBarThickness = 4
 tabButtonsScroll.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
