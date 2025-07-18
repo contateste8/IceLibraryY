@@ -111,7 +111,6 @@ tabButtonsScroll.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 tabButtonsScroll.BorderSizePixel = 0
 tabButtonsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 tabButtonsScroll.VerticalScrollBarInset = Enum.ScrollBarInset.Always
-tabButtonsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 tabButtonsScroll.Parent = mainFrame
 
 local tabCorner = Instance.new("UICorner")
@@ -176,7 +175,6 @@ outerCorner.Parent = outerFrame
 	contentScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	contentScroll.VerticalScrollBarInset = Enum.ScrollBarInset.Always
 	contentScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-	contentScroll.CanvasPadding = UDim.new(0, 20)
 	contentScroll.Parent = outerFrame
 
 	local layout = Instance.new("UIListLayout")
