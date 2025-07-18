@@ -191,7 +191,7 @@ padding.PaddingRight = UDim.new(0, 6)
 padding.Parent = contentScroll
 
 local spacer = Instance.new("Frame")
-spacer.Size = UDim2.new(1, 0, 0, 10)
+spacer.Size = UDim2.new(1, 0, 0, 30)
 spacer.BackgroundTransparency = 1
 spacer.BorderSizePixel = 0
 spacer.LayoutOrder = 999
