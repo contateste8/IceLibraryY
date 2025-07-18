@@ -335,7 +335,8 @@ function AddDropdown(tabScrollFrame, text, options, callback)
 	label.Parent = dropdownButton
 
 	local expanded = false
-	
+	local selected = nil
+
 	local optionFrame = Instance.new("ScrollingFrame")
 	optionFrame.Size = UDim2.new(1, 0, 0, 0)
 	optionFrame.Position = UDim2.new(0, 0, 0, 25)
@@ -351,8 +352,8 @@ function AddDropdown(tabScrollFrame, text, options, callback)
 	local cornerOptions = Instance.new("UICorner")
 	cornerOptions.CornerRadius = UDim.new(0, 4)
 	cornerOptions.Parent = optionFrame
-   
-    local paddingOpt = Instance.new("UIPadding")
+
+	local paddingOpt = Instance.new("UIPadding")
 	paddingOpt.PaddingTop = UDim.new(0, 4)
 	paddingOpt.PaddingBottom = UDim.new(0, 4)
 	paddingOpt.PaddingLeft = UDim.new(0, 6)
@@ -364,7 +365,18 @@ function AddDropdown(tabScrollFrame, text, options, callback)
 	layout.Padding = UDim.new(0, 2)
 	layout.Parent = optionFrame
 
-	for _, optText in ipairs(options) do
+	local optionButtons = {}
+
+	local function updateSelection(newSelected)
+		for _, btn in pairs(optionButtons) do
+			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		end
+		if newSelected then
+			newSelected.TextColor3 = Color3.fromRGB(0, 255, 255)
+		end
+	end
+
+	local function createOption(optText)
 		local optButton = Instance.new("TextButton")
 		optButton.Size = UDim2.new(1, 0, 0, 27)
 		optButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
@@ -382,34 +394,207 @@ function AddDropdown(tabScrollFrame, text, options, callback)
 		optCorner.Parent = optButton
 
 		optButton.MouseButton1Click:Connect(function()
-	label.Text = text .. ": " .. optText
-	if callback then
-		callback(optText)
-	end
-	expanded = false
+			selected = optButton
+			label.Text = text .. ": " .. optText
+			updateSelection(optButton)
+			if callback then callback(optText) end
+		end)
 
-	optionFrame:TweenSize(UDim2.new(1, 0, 0, 0), "Out", "Quad", 0.2, true)
-	dropdownHolder:TweenSize(UDim2.new(1, 0, 0, 30), "Out", "Quad", 0.2, true)
-end)
+		table.insert(optionButtons, optButton)
+	end
+
+	for _, optText in ipairs(options) do
+		createOption(optText)
 	end
 
 	dropdownButton.MouseButton1Click:Connect(function()
-	expanded = not expanded
-	local totalHeight = 0
-	for _, child in ipairs(optionFrame:GetChildren()) do
-		if child:IsA("TextButton") then
-			totalHeight += child.AbsoluteSize.Y + layout.Padding.Offset
+		expanded = not expanded
+		local totalHeight = 0
+		for _, child in ipairs(optionFrame:GetChildren()) do
+			if child:IsA("TextButton") then
+				totalHeight += child.AbsoluteSize.Y + layout.Padding.Offset
+			end
 		end
-	end
-	totalHeight += paddingOpt.PaddingTop.Offset + paddingOpt.PaddingBottom.Offset
-	local targetSize = expanded and UDim2.new(1, 0, 0, totalHeight) or UDim2.new(1, 0, 0, 0)
-	optionFrame:TweenSize(targetSize, "Out", "Quad", 0.2, true)
+		totalHeight += paddingOpt.PaddingTop.Offset + paddingOpt.PaddingBottom.Offset
+		local targetSize = expanded and UDim2.new(1, 0, 0, totalHeight) or UDim2.new(1, 0, 0, 0)
+		optionFrame:TweenSize(targetSize, "Out", "Quad", 0.2, true)
 
-	local holderTargetSize = expanded and UDim2.new(1, 0, 0, 30 + totalHeight) or UDim2.new(1, 0, 0, 30)
-	dropdownHolder:TweenSize(holderTargetSize, "Out", "Quad", 0.2, true)
-end)
+		local holderTargetSize = expanded and UDim2.new(1, 0, 0, 30 + totalHeight) or UDim2.new(1, 0, 0, 30)
+		dropdownHolder:TweenSize(holderTargetSize, "Out", "Quad", 0.2, true)
+	end)
 
-	return dropdownHolder
+	return {
+		Holder = dropdownHolder,
+		AddOption = function(optText)
+			createOption(optText)
+		end,
+		RemoveOption = function(optText)
+			for i, btn in ipairs(optionButtons) do
+				if btn.Text == optText then
+					btn:Destroy()
+					table.remove(optionButtons, i)
+					break
+				end
+			end
+		end
+	}
+end
+
+function AddMultiDropdown(tabScrollFrame, text, options, callback)
+    local dropdownHolder = Instance.new("Frame")
+    dropdownHolder.Size = UDim2.new(1, 0, 0, 30)
+    dropdownHolder.BackgroundTransparency = 1
+    dropdownHolder.ClipsDescendants = true
+    dropdownHolder.Parent = tabScrollFrame
+
+    local dropdownButton = Instance.new("TextButton")
+    dropdownButton.Size = UDim2.new(1, 0, 0, 30)
+    dropdownButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    dropdownButton.Text = ""
+    dropdownButton.BorderSizePixel = 0
+    dropdownButton.AutoButtonColor = true
+    dropdownButton.Parent = dropdownHolder
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 4)
+    corner.Parent = dropdownButton
+
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 6)
+    padding.PaddingRight = UDim.new(0, 6)
+    padding.Parent = dropdownButton
+
+    local icon = Instance.new("ImageLabel")
+    icon.Size = UDim2.new(0, 20, 0, 20)
+    icon.Position = UDim2.new(0, 0, 0.5, -10)
+    icon.BackgroundTransparency = 1
+    icon.Image = "rbxassetid://124611046242544"
+    icon.ScaleType = Enum.ScaleType.Fit
+    icon.Parent = dropdownButton
+
+    local icon2 = Instance.new("ImageLabel")
+    icon2.Size = UDim2.new(0, 20, 0, 20)
+    icon2.Position = UDim2.new(1, -20, 0.5, -10)
+    icon2.BackgroundTransparency = 1
+    icon2.Image = "rbxassetid://80424246541245"
+    icon2.ScaleType = Enum.ScaleType.Fit
+    icon2.Parent = dropdownButton
+
+    local label = Instance.new("TextLabel")
+    label.BackgroundTransparency = 1
+    label.Size = UDim2.new(1, -26, 1, 0)
+    label.Position = UDim2.new(0, 26, 0, 0)
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.SourceSans
+    label.TextSize = 16
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = dropdownButton
+
+    local expanded = false
+    local selectedOptions = {}
+    local optionFrame = Instance.new("ScrollingFrame")
+    optionFrame.Size = UDim2.new(1, 0, 0, 0)
+    optionFrame.Position = UDim2.new(0, 0, 0, 25)
+    optionFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    optionFrame.ScrollBarThickness = 0
+    optionFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    optionFrame.VerticalScrollBarInset = Enum.ScrollBarInset.Always
+    optionFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    optionFrame.BorderSizePixel = 0
+    optionFrame.ClipsDescendants = true
+    optionFrame.Parent = dropdownHolder
+
+    local cornerOptions = Instance.new("UICorner")
+    cornerOptions.CornerRadius = UDim.new(0, 4)
+    cornerOptions.Parent = optionFrame
+
+    local paddingOpt = Instance.new("UIPadding")
+    paddingOpt.PaddingTop = UDim.new(0, 4)
+    paddingOpt.PaddingBottom = UDim.new(0, 4)
+    paddingOpt.PaddingLeft = UDim.new(0, 6)
+    paddingOpt.PaddingRight = UDim.new(0, 6)
+    paddingOpt.Parent = optionFrame
+
+    local layout = Instance.new("UIListLayout")
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+    layout.Padding = UDim.new(0, 2)
+    layout.Parent = optionFrame
+
+    local function updateLabel()
+        local fullText = text .. ": " .. table.concat(selectedOptions, ", ")
+        if #fullText > 35 then
+            fullText = string.sub(fullText, 1, 32) .. " ..."
+        end
+        label.Text = #selectedOptions > 0 and fullText or text
+    end
+
+    local function createOption(optText)
+        local optButton = Instance.new("TextButton")
+        optButton.Size = UDim2.new(1, 0, 0, 27)
+        optButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        optButton.Text = optText
+        optButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        optButton.Font = Enum.Font.SourceSans
+        optButton.TextSize = 16
+        optButton.TextXAlignment = Enum.TextXAlignment.Left
+        optButton.AutoButtonColor = true
+        optButton.BorderSizePixel = 0
+        optButton.Parent = optionFrame
+
+        local optCorner = Instance.new("UICorner")
+        optCorner.CornerRadius = UDim.new(0, 4)
+        optCorner.Parent = optButton
+
+        optButton.MouseButton1Click:Connect(function()
+            local found = table.find(selectedOptions, optText)
+            if found then
+                table.remove(selectedOptions, found)
+                optButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            else
+                table.insert(selectedOptions, optText)
+                optButton.TextColor3 = Color3.fromRGB(0, 255, 255)
+            end
+            updateLabel()
+            if callback then callback(selectedOptions) end
+        end)
+    end
+
+    for _, optText in ipairs(options) do
+        createOption(optText)
+    end
+
+    dropdownButton.MouseButton1Click:Connect(function()
+        expanded = not expanded
+        local totalHeight = 0
+        for _, child in ipairs(optionFrame:GetChildren()) do
+            if child:IsA("TextButton") then
+                totalHeight += child.AbsoluteSize.Y + layout.Padding.Offset
+            end
+        end
+        totalHeight += paddingOpt.PaddingTop.Offset + paddingOpt.PaddingBottom.Offset
+        local targetSize = expanded and UDim2.new(1, 0, 0, totalHeight) or UDim2.new(1, 0, 0, 0)
+        optionFrame:TweenSize(targetSize, "Out", "Quad", 0.2, true)
+        local holderTargetSize = expanded and UDim2.new(1, 0, 0, 30 + totalHeight) or UDim2.new(1, 0, 0, 30)
+        dropdownHolder:TweenSize(holderTargetSize, "Out", "Quad", 0.2, true)
+    end)
+
+    return {
+        Holder = dropdownHolder,
+        AddOption = function(optText)
+            createOption(optText)
+        end,
+        RemoveOption = function(optText)
+            for _, child in ipairs(optionFrame:GetChildren()) do
+                if child:IsA("TextButton") and child.Text == optText then
+                    child:Destroy()
+                    local found = table.find(selectedOptions, optText)
+                    if found then table.remove(selectedOptions, found) end
+                    updateLabel()
+                end
+            end
+        end
+    }
 end
 
 function AddToggle(tabScrollFrame, text, default, callback)
