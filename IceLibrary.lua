@@ -104,13 +104,14 @@ end)
 
 local tabButtonsScroll = Instance.new("ScrollingFrame")
 tabButtonsScroll.Size = UDim2.new(0, 110, 1, -35)
-tabButtonsScroll.Position = UDim2.new(0, 0, 0, 35)
+tabButtonsScroll.Position = UDim2.new(0, 0, 0, 45)
 tabButtonsScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 tabButtonsScroll.ScrollBarThickness = 4
 tabButtonsScroll.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 tabButtonsScroll.BorderSizePixel = 0
 tabButtonsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 tabButtonsScroll.VerticalScrollBarInset = Enum.ScrollBarInset.Always
+tabButtonsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 tabButtonsScroll.Parent = mainFrame
 
 local tabCorner = Instance.new("UICorner")
@@ -682,7 +683,7 @@ function AddUserMessage(tabScrollFrame, messageText)
 
     local avatar = Instance.new("ImageLabel")  
     avatar.Size = UDim2.new(0, 90, 0, 90)  
-    avatar.Position = UDim2.new(0, 5, 0, 0)  
+    avatar.Position = UDim2.new(0, 10, 0, 0)  
     avatar.BackgroundColor3 = Color3.fromRGB(20,20,20)  
     avatar.BackgroundTransparency = 0  
     avatar.BorderSizePixel = 0  
