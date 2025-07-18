@@ -176,6 +176,7 @@ outerCorner.Parent = outerFrame
 	contentScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	contentScroll.VerticalScrollBarInset = Enum.ScrollBarInset.Always
 	contentScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+	contentScroll.CanvasPadding = UDim.new(0, 20)
 	contentScroll.Parent = outerFrame
 
 	local layout = Instance.new("UIListLayout")
