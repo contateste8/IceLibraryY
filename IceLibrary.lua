@@ -683,7 +683,7 @@ function AddUserMessage(tabScrollFrame, messageText)
 
     local avatar = Instance.new("ImageLabel")  
     avatar.Size = UDim2.new(0, 90, 0, 90)  
-    avatar.Position = UDim2.new(0, 10, 0, 0)  
+    avatar.Position = UDim2.new(0, 5, 0, 0)  
     avatar.BackgroundColor3 = Color3.fromRGB(20,20,20)  
     avatar.BackgroundTransparency = 0  
     avatar.BorderSizePixel = 0  
