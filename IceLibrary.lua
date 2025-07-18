@@ -33,6 +33,8 @@ local PhysicsService = game:GetService("PhysicsService")
 local MemoryStoreService = game:GetService("MemoryStoreService")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local player = game:GetService("Players").LocalPlayer
+local displayName = player.DisplayName
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "IceLibrary"
@@ -581,6 +583,14 @@ function AddTextBox(tabScrollFrame, config)
 end
 
 function AddParagraph(tabScrollFrame, titleText, descriptionText, thumbnailId, thumbWidth, thumbHeight)
+    if not tabScrollFrame:FindFirstChild("ListLayout") then
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Name = "ListLayout"
+    listLayout.Padding = UDim.new(0, 10)
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.Parent = tabScrollFrame
+    end
+
 	local holder = Instance.new("Frame")
 	holder.Size = UDim2.new(1, 0, 0, 0)
 	holder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
@@ -651,6 +661,63 @@ function AddParagraph(tabScrollFrame, titleText, descriptionText, thumbnailId, t
 	descLabel.Parent = holder
 
 	return holder
+end
+
+function AddUserMessage(tabScrollFrame, messageText)
+    if not tabScrollFrame:FindFirstChild("MessageListLayout") then
+        local layout = Instance.new("UIListLayout")
+        layout.Name = "MessageListLayout"
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Padding = UDim.new(0, 10)
+        layout.Parent = tabScrollFrame
+    end
+
+    local player = game:GetService("Players").LocalPlayer
+    local userId = player.UserId
+
+    local holder = Instance.new("Frame")  
+    holder.Size = UDim2.new(1, 0, 0, 90)  
+    holder.BackgroundTransparency = 1  
+    holder.BorderSizePixel = 0  
+    holder.Parent = tabScrollFrame  
+
+    local avatar = Instance.new("ImageLabel")  
+    avatar.Size = UDim2.new(0, 90, 0, 90)  
+    avatar.Position = UDim2.new(0, 10, 0, 0)  
+    avatar.BackgroundColor3 = Color3.fromRGB(20,20,20)  
+    avatar.BackgroundTransparency = 0  
+    avatar.BorderSizePixel = 0  
+    avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. tostring(userId) .. "&width=420&height=420&format=png"  
+    avatar.ScaleType = Enum.ScaleType.Crop  
+    avatar.Parent = holder  
+
+    local avatarCorner = Instance.new("UICorner")  
+    avatarCorner.CornerRadius = UDim.new(0, 4)  
+    avatarCorner.Parent = avatar  
+
+    local textHolder = Instance.new("Frame")  
+    textHolder.Size = UDim2.new(0, 220, 0, 40)  
+    textHolder.Position = UDim2.new(0, 105, 0, 0)
+    textHolder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)  
+    textHolder.BorderSizePixel = 0  
+    textHolder.Parent = holder  
+
+    local textCorner = Instance.new("UICorner")  
+    textCorner.CornerRadius = UDim.new(0, 4)  
+    textCorner.Parent = textHolder
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = messageText
+    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textLabel.Font = Enum.Font.SourceSans
+    textLabel.TextSize = 16
+    textLabel.TextXAlignment = Enum.TextXAlignment.Center
+    textLabel.TextWrapped = true
+    textLabel.Parent = textHolder
+
+    return holder
 end
 
 function WindowSetTitle(title)
