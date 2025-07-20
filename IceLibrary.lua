@@ -1670,7 +1670,7 @@ function AddSlider(tabScrollFrame, labelText, config)
 	local callback = config.callback or function() end
 
 	local holder = Instance.new("Frame")
-	holder.Size = UDim2.new(1, -10, 0, 60)
+	holder.Size = UDim2.new(1, 0, 0, 60)
 	holder.Position = UDim2.new(0, 5, 0, 0)
 	holder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 	holder.BorderSizePixel = 0
